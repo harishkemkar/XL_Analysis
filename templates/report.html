@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Excel File Analysis Report</h1>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Summary -->
+        <h2>Summary</h2>
+        <p><strong>Total Columns:</strong> {{ summary.total_columns }}</p>
+
+        <!-- Numeric Columns -->
+        <h3>Numeric Columns</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                    <th>Mean</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for col in summary.numeric_columns %}
+                <tr>
+                    <td>{{ col.name }}</td>
+                    <td>{{ col.min }}</td>
+                    <td>{{ col.max }}</td>
+                    <td>{{ col.mean }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Categorical Columns -->
+        <h3>Categorical Columns</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column</th>
+                    <th>Unique Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for col in summary.categorical_columns %}
+                <tr>
+                    <td>{{ col.name }}</td>
+                    <td>{{ col.unique_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Unique Columns -->
+        <h3>Unique Columns</h3>
+        <ul>
+            {% for col in summary.unique_columns %}
+            <li>{{ col }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Column selection form -->
+        <h2>Analyze Specific Columns</h2>
+        <form method="POST" action="{{ url_for('analyze_columns') }}">
+            <!-- FIXED: filename passed correctly -->
+            <input type="hidden" name="filename" value="{{ filename }}">
+            {% for col in columns %}
+                <input type="checkbox" name="columns" value="{{ col }}"> {{ col }} <br>
+            {% endfor %}
+            <button type="submit">Analyze Selected Columns</button>
+        </form>
+
+        <!-- Detailed Analysis of Selected Columns -->
+        {% if summary.selected_columns %}
+        <h2>Detailed Analysis of Selected Columns</h2>
+        {% for col, details in summary.selected_columns.items() %}
+            <h3>{{ col }}</h3>
+            {% if details.min is defined %}
+            <!-- Numeric column -->
+            <table>
+                <thead>
+                    <tr><th>Min</th><th>Max</th><th>Mean</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ details.min }}</td>
+                        <td>{{ details.max }}</td>
+                        <td>{{ details.mean }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <!-- Categorical column -->
+            <p><strong>Unique Values:</strong> {{ details.unique_count }}</p>
+            <table>
+                <thead>
+                    <tr><th>Value</th><th>Count</th></tr>
+                </thead>
+                <tbody>
+                    {% for val, count in details.value_counts.items() %}
+                    <tr>
+                        <td>{{ val }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

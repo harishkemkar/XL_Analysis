@@ -1,0 +1,73 @@
+create a web based tool which , on which we can upload a  excel file in xlsx format 
+tool will analyse the xlsxx file uploaded 
+and it will create a summary type of report  giving details like 
+
+Total number of columns 
+columns having numeric data 
+Min and Max values form column having numeric data 
+columns having character data
+column having unique data 
+Allow users to select specific columns and share details on those columns 
+	Details like 
+        if Numeric column - 
+        Min , Max , average    
+        if non numeric than than details like how many unique values present    
+        count of each vallues
+   
+
+
+********************************************************************************************************************************************************
+Folder structure   
+
+file-analysis-tool/
+│
+├── app.py                  # Main Flask entry point
+├── requirements.txt        # Python dependencies (Flask, pandas, openpyxl, etc.)
+├── config.py               # Optional: configuration (secret key, upload folder)
+│
+├── analysis_utils/         # Core analysis logic
+│   ├── __init__.py
+│   ├── analyzer.py         # Functions for profiling data (numeric, categorical, etc.)
+│   └── helpers.py          # Utility functions (type checks, formatting)
+│
+├── uploads/                # Temporary storage for uploaded Excel files
+│
+├── templates/              # HTML templates (Jinja2)
+│   ├── index.html          # Upload form + column selection
+│   └── report.html         # Summary report display
+│
+├── static/                 # CSS, JS, images
+│   ├── css/
+│   │   └── style.css       # Custom styling
+│   └── js/
+│       └── script.js       # Optional interactivity
+│
+├── tests/                  # Unit tests
+│   ├── test_analyzer.py    # Test numeric/categorical profiling
+│   └── test_routes.py      # Test Flask routes
+│
+└── Dockerfile              # For containerization (optional)
+
+
+
+
+Explanation 
+**********************************************************************************************************************************************************************************************
+our Current Structure (Explained)
+- app.py → Entry point for your Flask app. This will define routes (/upload, /report) and tie everything together.
+- requirements.txt → List of dependencies (Flask, pandas, openpyxl, etc.) so anyone can install with pip install -r requirements.txt.
+- config.py → Central place for settings (secret key, upload folder path, debug flags). Keeps app.py clean.
+- analysis_utils/ → Perfect spot for your core logic:
+
+- analyzer.py → functions for profiling numeric/categorical columns.
+- helpers.py → utility functions (type detection, formatting).
+- uploads/ → Temporary storage for uploaded Excel files.
+- templates/ → Jinja2 HTML templates (index.html for upload form, report.html for summary).
+- tests/ → Unit tests for both analysis logic and Flask routes. Great for CI/CD.
+- static/ → CSS, JS, images for styling and interactivity.
+- Dockerfile → Containerization for deployment. You can run this tool anywhere once you dockerize.
+
+**********************************************************************************************************************************************************************************************
+
+
+
