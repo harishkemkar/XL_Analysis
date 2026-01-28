@@ -1,0 +1,22 @@
+To runn this app from AWS ec2 follow this  
+
+make repo public 
+Clone repository  
+git clone  https://github.com/harishkemkar/XL_Analysis
+
+pip install -r requirements.txt
+
+python3 app.py 
+
+from any machine 
+Type in browser public ip4v address of the ec2 machine   
+http://<Ip>:5000
+
+make sure security groups haev allowed tcp access from all ip's  (0.0.0.0)
+
+to run in production mode  use below  
+
+pip install gunicorn
+
+
+gunicorn -w 4 -b 0.0.0.0:5000 main:app
